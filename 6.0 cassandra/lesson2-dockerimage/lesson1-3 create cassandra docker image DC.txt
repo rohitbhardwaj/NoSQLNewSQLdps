@@ -1,0 +1,28 @@
+To deploy a single Cassandra node, specifying a datacenter and rack:
+
+docker run --name n1 -d tobert/cassandra -dc DC1 -rack RAC1
+
+docker inspect -f '{{ .NetworkSettings.IPAddress }}' n1
+
+To add a second node in a different rack:
+
+docker run --name n2 -d tobert/cassandra -dc DC1 -rack RAC2 -seeds IP
+
+(where IP is the IP address of the first node, retrieved via the same
+process outlined above)
+
+To view the configuration file where the datacenter and rack info is stored:
+
+docker exec -it n1 /bin/bash
+vi /data/conf/cassandra-rackdc.properties
+
+docker exec -it n1 nodetool status
+
+docker exec -it n1 nodetool ring
+
+examine the ring showing how data is stored
+
+docker stop n1 n2
+docker rm n1 n2
+
+

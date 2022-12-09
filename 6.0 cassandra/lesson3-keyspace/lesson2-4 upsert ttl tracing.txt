@@ -1,0 +1,65 @@
+
+Let's create a users table:
+
+    create table users (
+        id varchar primary key,
+        first_name varchar,
+        last_name varchar,
+        email varchar,
+        password varchar
+        ) with comment = 'A table of users';
+
+Then we'll insert and "upsert" two rows of data:
+
+	insert into users (id, first_name, last_name, email) values ('rohit-bhardwaj', 'Rohit', 'Bhardwaj', 'rbhardwaj@kronos.com');
+
+	select * from users;
+
+	update users set first_name = 'Rohit wonderful', last_name = 'Bharadwaj NFJS' where id = 'rohit-bhardwaj';
+
+	select * from users;
+
+	insert into users (id, first_name, last_name, email) values ('neil-ford', 'Neil', 'Ford', 'neilford@neilford.com');
+
+
+(Note that the net effect of the insert and update are the same.)
+
+Now we'll add a new 'reset_token' column to this table, and add a value to this column with a TTL:
+
+    alter table users add reset_token varchar;
+    update users using ttl 40 set reset_token = 'ImportantValue' where id = 'rohit-bhardwaj';
+
+We can retrieve the time remaining for a ttl with the 'ttl' query function:
+
+    select ttl(reset_token), reset_token from users where id = 'rohit-bhardwaj';
+
+We can turn on tracing and do a select to see that there are currently no tombstones:
+
+    tracing on;
+    select * from users where id = 'rohit-bhardwaj';
+
+(Re-run this several times until the 40 seconds have elasped and the token_value will be gone, and tracing will show a tombstone.)
+
+-----
+
+Create a ratings table with two counter columns:
+
+    create table ratings (
+        talk_id varchar primary key,
+        ratings_count counter,
+        ratings_total counter
+        ) with comment = 'A table of talk ratings';
+
+Now let's increment both counter columns to represent receiving a new talk rating of 4:
+
+    update ratings set ratings_count = ratings_count + 1, ratings_total = ratings_total + 4 where talk_id = 'rohit-bhardwaj';
+    select * from ratings;
+
+(The select should show the data we just upserted.)
+
+Now let's add a second talk rating of 3:
+
+    update ratings set ratings_count = ratings_count + 1, ratings_total = ratings_total + 3 where talk_id = 'rohit-bhardwaj';
+    select * from ratings;
+
+This should show the new values of "2" and "7" for ratings_count and ratings_total respectively.

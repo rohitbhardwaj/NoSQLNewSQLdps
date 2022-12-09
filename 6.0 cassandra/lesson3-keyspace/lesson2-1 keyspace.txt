@@ -1,0 +1,47 @@
+docker run --name=n1 -d tobert/cassandra
+docker inspect -f '{{ .NetworkSettings.IPAddress }}' n1
+docker run --name=n2 -d tobert/cassandra -seeds 172.17.0.2
+docker exec -it n1 nodetool status
+
+
+Run cqlsh with:
+
+    docker exec -it n1 cqlsh
+
+Create a keyspace by entering this CQL at the cqlsh> prompt:
+
+    create keyspace nfjs with replication = {'class':'SimpleStrategy', 'replication_factor':3};
+	exit
+Examine the token allocations for this keyspace by exiting cqlsh and running a new nodetool command:
+
+    docker exec -it n1 nodetool describering nfjs
+
+Run nodetool status, supplying the name of the keyspace, and notice that each node "owns" 100% of the data:
+
+    docker exec -it n1 nodetool status nfjs
+
+Now run cqlsh again and drop and recreate the keyspace with a different replication factor:
+    docker exec -it n1 cqlsh
+	
+    drop keyspace nfjs;
+    create keyspace nfjs with replication = {'class':'SimpleStrategy', 'replication_factor':1};
+	exit
+	
+Run nodetool status again and notice that now each node only "owns" about a third of the data:
+
+    docker exec -it n1 nodetool status nfjs
+
+Run nodetool describering again and notice that each token range is only allocated one endpoint:
+
+    docker exec -it n1 nodetool describering nfjs
+
+Take one of the end_token values from these results and find it in the nodetool ring output:
+
+    docker exec -it n1 nodetool ring | grep [end_token]
+
+(where [end_token] is an end_token value taken from the results of nodetool describering)
+Note that the IP address is same as the end_point found in the describering output
+
+Stop and remove each of your docker containers:
+
+    docker stop n1 n2 ; docker rm n1 n2 ;

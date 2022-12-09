@@ -1,0 +1,31 @@
+Akka
+//start the first seed node with the following command:
+
+/Users/rohitbhardwaj/Documents/00Technology/activator-dist-1.3.12/bin/activator "runMain worker.Main 2551"
+
+// start the frontend node with the following command
+
+/Users/rohitbhardwaj/Documents/00Technology/activator-dist-1.3.12/bin/activator  "runMain worker.Main 3001"	
+
+//start a worker node with the following command:
+/Users/rohitbhardwaj/Documents/00Technology/activator-dist-1.3.12/bin/activator   "runMain worker.Main 0"
+
+//Shutdown the worker node (third terminal window) with 
+
+ctrl-c
+
+// Start the worker node again.
+/Users/rohitbhardwaj/Documents/00Technology/activator-dist-1.3.12/bin/activator   "runMain worker.Main 0"
+
+
+// start backend node
+//You can start more cluster backend nodes using port numbers between 2000-2999:
+/Users/rohitbhardwaj/Documents/00Technology/activator-dist-1.3.12/bin/activator "runMain worker.Main 2552"
+
+// You can start more cluster frontend nodes using port numbers between 3000-3999:
+/Users/rohitbhardwaj/Documents/00Technology/activator-dist-1.3.12/bin/activator  "runMain worker.Main 3002"
+
+/Users/rohitbhardwaj/Documents/00Technology/activator-dist-1.3.12/bin/activator  clean run
+
+
+

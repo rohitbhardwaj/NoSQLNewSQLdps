@@ -1,0 +1,39 @@
+
+To deploy a single Cassandra node to this docker host, run this command:
+
+docker run --name=n1 -d tobert/cassandra
+
+You need the IP of this first container to pass as a parameter to subsequent
+containers, so to find the IP address, run this command:
+
+docker inspect -f '{{ .NetworkSettings.IPAddress }}' n1
+
+To add a second node to the Cassandra cluster, run this command:
+
+docker run --name=n2 -d tobert/cassandra -seeds IP
+
+(where IP is the IP address you retrieved in the previous step)
+
+At any time you can check the status of the cluster by running:
+
+docker exec -it n1 nodetool status
+
+(In fact, you can run it on any node:  n1 or n2)
+
+You can view the virtual node token allocations by running:
+
+docker exec -it n1 nodetool ring
+
+You can log into one of the containers and view the configuration file with:
+
+docker exec -it n1 /bin/bash
+vi /data/conf/cassandra.yaml
+
+Esc : q
+
+exit
+
+When you're done, stop and remove the Cassandra containers with:
+
+docker stop n1 n2 
+docker rm n1 n2 

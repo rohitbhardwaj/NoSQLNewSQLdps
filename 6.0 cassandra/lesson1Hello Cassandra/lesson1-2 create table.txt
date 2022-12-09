@@ -1,0 +1,40 @@
+/Users/rbhardwaj/Documents/00Technology/apache-cassandra-3.7/bin
+
+Start cassandra node
+./cassandra
+
+start sql tool
+./cqlsh
+
+	drop keyspace nfjs;
+
+
+    create keyspace nfjs with replication = {'class':'SimpleStrategy', 'replication_factor':3};
+	exit
+Examine the token allocations for this keyspace by exiting cqlsh and running a new nodetool command:
+
+    ./nodetool describering nfjs
+
+Run nodetool status, supplying the name of the keyspace, and notice that each node "owns" 100% of the data:
+
+    ./nodetool status nfjs
+
+Now run cqlsh again and drop and recreate the keyspace with a different replication factor:
+    ./cqlsh
+	
+    drop keyspace nfjs;
+    create keyspace nfjs with replication = {'class':'SimpleStrategy', 'replication_factor':1};
+	exit
+	
+Run nodetool status again and notice that now each node only "owns" about a third of the data:
+
+    ./nodetool status nfjs
+
+Run nodetool describering again and notice that each token range is only allocated one endpoint:
+
+    ./nodetool describering nfjs
+
+Take one of the end_token values from these results and find it in the nodetool ring output:
+
+    nodetool ring | grep [end_token]
+

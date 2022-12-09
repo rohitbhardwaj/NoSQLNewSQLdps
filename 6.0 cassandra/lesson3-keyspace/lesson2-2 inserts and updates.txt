@@ -1,0 +1,63 @@
+
+-----
+
+If you're not running Cassandra locally, start it up in a docker container with:
+
+    docker run --name n1 -d tobert/cassandra
+
+If you're running Cassandra locally, you'll find 'cqlsh' in the same 'bin' directory as 'cassandra' mentioned above.
+If you're running docker, run cqlsh with:
+
+    docker exec -it n1 cqlsh
+
+Create a keyspace with:
+
+    create keyspace nfjs with replication = {'class':'SimpleStrategy', 'replication_factor':1};
+
+Create a table in this keyspace with:
+
+    use nfjs;
+    create table talks (id varchar primary key);
+
+Optionally attempt to create the table again with:
+
+    create table if not exists talks (id varchar primary key);
+
+(and note that you will not get an error as long as the 'if not exists' is present)
+
+Add a few columns to the talks table with:
+
+    alter table talks add duration int;
+    alter table talks add released timestamp;
+    alter table talks add speaker varchar;
+
+Add a comment to the table with:
+
+    alter table talks with comment = 'A table of talks';
+
+View the complete table and all its default properties with:
+
+    desc table talks;
+
+Drop and recreate a more complete talks table with:
+
+    drop table talks;
+    create table talks (
+        id varchar primary key,
+        name varchar,
+        speaker varchar,
+        audience int,
+        duration int,
+        cc boolean,
+        released timestamp
+        ) with comment = 'A table of talks';
+
+(Note that when entering the lines as above cqlsh will automatically detect a multi-line CQL statement)
+
+View the completed table one last time:
+
+    desc table talks;
+
+
+docker stop n1 n2; docker rm n1 n2;
+-----

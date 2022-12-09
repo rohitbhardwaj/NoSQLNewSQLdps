@@ -1,0 +1,15 @@
+Add a "tags" set column to the users table, and add some entries for Neil Ford
+
+    alter table users add tags set<varchar>;
+    update users set tags = {'architecture-development','continious-engineering','test-driven-development'} where id = 'neil-ford';
+
+Try to specify "tags" in a where clause, and it won't work
+
+    select * from users where tags contains 'continious-engineering';
+
+Create an index on the tags column of the users table, and re-run the select statement
+
+    create index on users(tags);
+    select * from users where tags contains 'continious-engineering';
+
+

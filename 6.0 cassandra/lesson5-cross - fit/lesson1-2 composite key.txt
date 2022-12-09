@@ -1,0 +1,40 @@
+
+drop table crossfit_gyms_by_location ; 
+=====================================
+
+CREATE TABLE crossfit_gyms_by_location ( 
+    country_code text,
+    state_province text,
+    city text,
+    gym_name text,
+    PRIMARY KEY ((country_code, state_province, city), gym_name) 
+) WITH CLUSTERING ORDER BY (gym_name ASC); 
+
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('USA', 'CA', 'San Francisco', 'San Francisco CrossFit');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('USA', 'CA', 'San Francisco', 'LaLanne Fitness CrossFit');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('USA', 'NY', 'New York', 'CrossFit NYC');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('USA', 'NY', 'New York', 'CrossFit Metropolis');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('USA', 'NV', 'Las Vegas', 'CrossFit Las Vegas');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('USA', 'NV', 'Las Vegas', 'Kaizen CrossFit');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('CAN', 'ON', 'Toronto', 'CrossFit Toronto');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('CAN', 'ON', 'Toronto', 'CrossFit Leslieville');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('CAN', 'BC', 'Vancouver', 'CrossFit Vancouver');
+INSERT INTO crossfit_gyms_by_location (country_code, state_province, city, gym_name) VALUES ('CAN', 'BC', 'Vancouver', 'CrossFit BC');
+
+select * from crossfit_gyms_by_location;
+
+ country_code | state_province | city          | gym_name
+--------------+----------------+---------------+--------------------------
+          USA |             NY |      New York |      CrossFit Metropolis
+          USA |             NY |      New York |             CrossFit NYC
+          USA |             NV |     Las Vegas |       CrossFit Las Vegas
+          USA |             NV |     Las Vegas |          Kaizen CrossFit
+          USA |             CA | San Francisco | LaLanne Fitness CrossFit
+          USA |             CA | San Francisco |   San Francisco CrossFit
+          CAN |             ON |       Toronto |     CrossFit Leslieville
+          CAN |             ON |       Toronto |         CrossFit Toronto
+          CAN |             BC |     Vancouver |              CrossFit BC
+          CAN |             BC |     Vancouver |       CrossFit Vancouver
+
+(10 rows)
+

@@ -1,0 +1,39 @@
+./cqlsh
+=====
+Create if user table not already created
+case class User(id: String, name: String, email: String)
+
+
+    create table users (
+        id varchar primary key,
+        first_name varchar,
+        last_name varchar,
+        email varchar,
+        password varchar
+        ) with comment = 'A table of users';
+
+Then we'll insert and "upsert" two rows of data:
+
+	insert into users (id, first_name, last_name, email) values ('rohit-bhardwaj', 'Rohit', 'Bhardwaj', 'rbhardwaj@kronos.com');
+	insert into users (id, first_name, last_name, email) values ('neil-ford', 'Neil', 'Ford', 'neilford@neilford.com');
+
+	select * from users;
+
+
+====
+
+Add a "enterprise" column to the users table, and set it for Neil Ford
+
+    alter table users add enterprise varchar;
+    update users set enterprise = 'Thoughtworks' where id = 'neil-ford';
+
+Try to specify "enterprise" in a where clause, and it won't work
+
+    select * from users where enterprise = 'Thoughtworks';
+
+Create an index on the enterprise column of the users table, and re-run the select statement
+
+    create index on users(enterprise);
+    select * from users where enterprise = 'Thoughtworks';
+	
+	

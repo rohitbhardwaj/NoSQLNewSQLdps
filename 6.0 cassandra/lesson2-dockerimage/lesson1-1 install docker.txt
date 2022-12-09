@@ -1,0 +1,27 @@
+To setup your environment (on Mac & Windows)
+
+	(1) Download VirtualBox from https://www.virtualbox.org/
+	(2) Download Docker https://docs.docker.com/kitematic/
+
+
+	(on Linux it should work if you just have the docker package installed)
+
+
+VirtualBox (https://www.virtualbox.org/wiki/Downloads) is the recommended software for running our virtual machines. It is free to download for Windows, Mac OS X, and Linux.
+
+ 
+
+VMware Workstation Player (https://www.vmware.com/products/player) is a free download for Windows and Linux is also supported. For Mac OS X VMware Fusion (paid license) is required.
+
+
+Hardware Requirements:
+
+ 
+
+RAM & CPU: A minimum of 8 GB of RAM is required. The virtual machine will use 4 GB of RAM. A 64-bit dual core processor is required.
+
+ 
+
+BIOS: On Windows machines, Virtualization Technology (VT) must be enabled. http://www.vmware.com/a/info/?id=152
+
+For windows you might need to change the program 

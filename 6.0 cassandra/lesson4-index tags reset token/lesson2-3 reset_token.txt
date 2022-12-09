@@ -1,0 +1,35 @@
+create table personas (
+    id varchar primary key,
+    first_name varchar,
+    last_name varchar,
+    company varchar,
+    tags set<varchar>,
+    email varchar,
+    password varchar,
+    reset_token varchar,
+    last_login tuple<timestamp,inet>
+) with comment = 'A table of personas';
+
+	insert into personas (id, first_name, last_name, company, tags, email) values ('rohit-bhardwaj', 'Rohit', 'Bhardwaj', 'Kronos', {'cloud'}, 'rbhardwaj@kronos.com');
+
+	insert into personas (id, first_name, last_name, company, tags, email) values ('neil-ford', 'Neil', 'Ford', 'Thoughtworks',  {'continious-delivery'}, 'neilford@neilford.com');
+
+
+create index on personas(company);
+create index on personas(tags);
+
+
+
+
+Set the "reset_token" value for Neil Ford and see what we have
+
+    update personas set reset_token = '3Ekjnfl' where id = 'neil-ford';
+    select id, password, reset_token from personas;
+
+Try to update the password and clear the reset token, but with an incorrect reset token (and watch it fail)
+
+    update personas set password = 'newpassword', reset_token = null where id = 'neil-ford' if reset_token = 'wrong';
+
+Now try it again with the correct reset token (and watch it succeed)
+
+    update personas set password = 'newpassword', reset_token = null where id = 'neil-ford' if reset_token = '3Ekjnfl';

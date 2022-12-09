@@ -1,0 +1,78 @@
+If you're not running Cassandra locally, start-up Cassandra in a docker container.
+However, this time mount a directory from the host system into the container:
+
+    docker run --name n1 -v $PWD/scripts:/scripts -d tobert/cassandra
+	docker run --name n1 -v /Users/rbhardwaj/Dropbox/NFJS/2016/uberconf/Workshop/cassandra/lesson2-keyspace/script:/scripts -d tobert/cassandra
+
+(This will mount a scripts directory under the host's current directory to a root-level scripts directory in the container)
+Note:  This scripts directory on the host should contain m3/talks.cql
+
+Verify that the container has access to the talks.cql file:
+
+    docker exec -it n1 /bin/bash
+    cd /scripts
+    exit
+
+(This 'ls' should show the 'talks.cql' file.)
+
+If you're running Cassandra locally, you'll find 'cqlsh' in the same 'bin' directory as 'cassandra' mentioned above.
+If you're running docker, run cqlsh with:
+
+    docker exec -it n1 cqlsh
+
+Use the 'source' cqlsh command to execute the CQL commands contained in the file.
+If you're running Cassandra on docker, run:
+
+    source '/scripts/talks.cql'
+	source '/Users/rbhardwaj/Dropbox/NFJS/2016/uberconf/Workshop/cassandra/lesson2-keyspace/script/talks.cql' 
+	
+
+If you're running Cassandra locally, you should use the full path to the talks.cql file on your system
+
+Verify that the CQL commands in the file were indeed executed:
+
+    use nfjs;
+    desc tables;
+    select * from talks;
+
+(The 'desc tables' should show a single 'talks' table, and the 'select' statement should show 5 rows of sample data.)
+
+The 'expand' cqlsh command will display the query results in a 'one column per line' format:
+
+    expand on;
+    select * from talks;
+    expand off;
+
+-----
+
+You can display the time a piece of data was written with the 'writetime' function:
+
+    select id, cc, writetime(cc) from talks where id ='Cloud-Architectural-design-patterns-blueprints';
+
+We can update this cc column with an 'update' statement:
+
+    update talks set cc = true where id = 'Cloud-Architectural-design-patterns-blueprints';
+
+Now re-run the select statement containing the 'writetime' function and notice that the time has changed.
+You can prove to yourself that this write time is stored on a per column basis by selecting this for a different column:
+
+    select id, name, writetime(name) from talks where id = 'Cloud-Architectural-design-patterns-blueprints';
+	update talks set cc = true where id ='Cloud-Architectural-design-patterns-blueprints';
+
+Note that this writetime value is the same as the one returned by our first 'cc' query.
+
+-----
+
+Cassandra also provides a function for returning the token associated with a partition key:
+
+    select id, token(id) from talks;
+
+-----
+
+If you try to select from a column other than the primary key, you'll get an error:
+
+    select * from talks where speaker = 'Venkat Subramaniam';
+
+(We'll show how to do this in a later module.)
+
+-----

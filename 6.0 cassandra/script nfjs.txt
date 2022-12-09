@@ -1,0 +1,32 @@
+create keyspace nfjs with replication = {'class':'SimpleStrategy', 'replication_factor':3};
+
+describe nfjs;
+
+use nfjs;
+
+create table talks (
+        id varchar primary key,
+        name varchar,
+        speaker varchar,
+		        audience int,
+        duration int,
+        cc boolean,
+        released timestamp
+        ) with comment = 'A table of talks';
+
+
+desc table talks;
+
+source '/Users/rohitbhardwaj/Dropbox/NFJS/2017/uberconf/Workshop/final/exercises/cassandra/lesson3-keyspace/scripts/talks.cql'
+
+desc tables;
+select * from talks;
+
+select * from talks where speaker = 'Venkat Subramaniam' ;
+
+select * from talks where speaker = 'Venkat Subramaniam' ALLOW FILTERING;
+
+create index on talks(speaker);
+
+
+
